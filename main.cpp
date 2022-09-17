@@ -22,14 +22,6 @@
 //#endif
 //const std::string platform = PLATFORM_NAME;
 
-#include "client.h"
-
-int main() {
-    std::cout << "Hello, World!" << std::endl;
-
-    Client client;
-    std::cout << client.getResponse("google.com");
-
 //    if (platform == "linux") {
 //        system("xdg-open https://ru.wikipedia.org/w/index.php?curid=11099");
 //
@@ -38,6 +30,17 @@ int main() {
 //        system("start https://ru.wikipedia.org/w/index.php?curid=11099");
 //    }
 //    else if ()
+
+
+#include "client.h"
+
+int main() {
+    std::cout << "Hello, World!" << std::endl;
+
+    std::string leti("ru.wikipedia.org/w/api.php?action=query&format=json&list=search&srsearch=%22%D0%9B%D1%8D%D1%82%D0%B8%22&utf8=");
+    Client client;
+
+    std::cout << client.getResponse(leti);
 
     return 0;
 }
