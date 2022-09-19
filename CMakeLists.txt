@@ -15,7 +15,6 @@ set(OPENSSL_CRYPTO_LIBRARY /usr/local/ssl/lib/libcrypto.so)
 set(OPENSSL_SSL_LIBRARY /usr/local/ssl/lib/libssl.so)
 find_package(OpenSSL REQUIRED)
 
-add_executable(WikiApp main.cpp client.h JsonParser.h)
+add_executable(WikiApp main.cpp HttpClient.h JsonParser.h App.h)
 target_include_directories(WikiApp PRIVATE ${Boost_INCLUDE_DIRS})
 target_link_libraries(WikiApp ${Boost_LIBRARIES} OpenSSL::SSL)
-
