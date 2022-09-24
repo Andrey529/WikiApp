@@ -52,7 +52,8 @@ public:
                 break;
             default:
                 std::cout << "Unexpected HTTP status " << res.result_int() << "\n";
-                break;
+                stream.socket().shutdown(boost::asio::ip::tcp::socket::shutdown_both, ec);
+                return "";
         }
 
 
@@ -108,6 +109,7 @@ public:
                 break;
             default:
                 std::cout << "Unexpected HTTP status " << res.result_int() << "\n";
+                stream.shutdown();
                 return "";
         }
 
@@ -121,6 +123,7 @@ public:
         return boost::beast::buffers_to_string(res.body().data());
     }
 
+    // url encoder converts characters into a format that can be transmitted over the Internet
     std::string urlEncode(const std::string &value) {
         std::ostringstream escaped;
         escaped.fill('0');
@@ -135,7 +138,7 @@ public:
 
             // Any other characters are percent-encoded
             escaped << std::uppercase;
-            escaped << '%' << std::setw(2) << int((unsigned char) c);
+            escaped << '%' << std::setw(2) << static_cast<int>(static_cast<unsigned char>(c));
             escaped << std::nouppercase;
         }
 

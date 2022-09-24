@@ -54,16 +54,17 @@ void App::processingRequest() {
     std::string encodedSearchQuery = client.urlEncode("\"" + searchQuery_ + "\"");
     jsonResponse_ = client.getRequestHttps(urlWithoutSearchQuery_ + encodedSearchQuery);
 
-    if (jsonResponse_.empty()) {
-        std::cout << "Enter a valid search query" << std::endl;
-        exitStatus_ = EXIT_STATUS::CONTINUE;
-        return;
-    }
+    JsonParser jsonParser(jsonResponse_);
+    // parse titles and pageIds from jsonResponse_
+    titlesAndPageIds_ = jsonParser.getTitlesAndPageIds();
 
     exitStatus_ = EXIT_STATUS::CONTINUE_WITH_ASKING;
 
-    JsonParser jsonParser(jsonResponse_);
-    titlesAndPageIds_ = jsonParser.getTitlesAndPageIds();
+    // if search query is invalid, after parsing titlesAndPageIds will be empty
+    if (titlesAndPageIds_.empty()) {
+        std::cout << "Enter a valid search query" << std::endl;
+        exitStatus_ = EXIT_STATUS::CONTINUE;
+    }
 }
 
 void App::selectDesiredArticle() {
@@ -84,7 +85,7 @@ void App::openSelectedArticle() {
 
 void App::askWouldLikeToDoAnotherRequest() {
     std::cout << "Would you like to make a request?   (yes/no)" << std::endl;
-    std::string answer("!");
+    std::string answer;
     std::cin >> answer;
     while (answer != "yes" && answer != "no") {
         std::cout << "Enter a valid answer" << std::endl;
